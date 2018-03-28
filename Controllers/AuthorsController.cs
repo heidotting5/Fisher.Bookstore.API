@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fisher.Bookstore.Api.Data;
 using Fisher.Bookstore.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,13 +20,13 @@ namespace Fisher.Bookstore.Api.Controllers
             if (this.db.Authors.Count() == 0)
             {
                 this.db.Authors.Add(new Author {
-                    AuthorId = 1,
-                    AuthorName = "Dahl, Roald"
+                    Id = 1,
+                    Name = "Dahl, Roald"
                 });
 
                 this.db.Authors.Add(new Author {
-                    AuthorId = 2,
-                    AuthorName = "Rowling, J.K."
+                    Id = 2,
+                    Name = "Rowling, J.K."
                 });
 
                 this.db.SaveChanges();
@@ -66,24 +67,24 @@ namespace Fisher.Bookstore.Api.Controllers
             this.db.Authors.Add(Author);
             this.db.SaveChanges();
 
-            return CreatedAtRoute("GetAuthor", new { id = Author.AuthorId}, Author);
+            return CreatedAtRoute("GetAuthor", new { id = Author.Id}, Author);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody]Author newAuthor)
         {
-            if (newAuthor == null || newAuthor.AuthorId != id)
+            if (newAuthor == null || newAuthor.Id != id)
             {
                 return BadRequest();
             }
-            var currentAuthor = this.db.Authors.FirstOrDefault(x => x.AuthorId == id);
+            var currentAuthor = this.db.Authors.FirstOrDefault(x => x.Id == id);
 
             if (currentAuthor == null)
             {
                 return NotFound();
             }
 
-            currentAuthor.BirthDate = newAuthor.BirthDate;
+            currentAuthor.Bio = newAuthor.Bio;
 
             this.db.Authors.Update(currentAuthor);
             this.db.SaveChanges();
@@ -95,7 +96,7 @@ namespace Fisher.Bookstore.Api.Controllers
 
         public IActionResult Delete(int id)
         {
-            var Author = this.db.Authors.FirstOrDefault(x => x.AuthorId == id);
+            var Author = this.db.Authors.FirstOrDefault(x => x.Id == id);
 
             if (Author == null)
             {
